@@ -1,21 +1,27 @@
-import { Request, Response } from "express";
-import User from "../model/user.model";
+import { RequestHandler } from 'express';
+import User from '../model/user.model';
 
-export const createUser = async (req: Request, res: Response): Promise<any>  => {
-    try {
-        const { auth0Id } = req.body;
-        const existingUser = await User.findOne({ auth0Id });
+export const createUser: RequestHandler = async (req, res) => {
+  try {
+    const { auth0Id, email } = req.body;
 
-        if (existingUser) {
-            return res.status(200).send();
-        }
-        const newUser = new User(req.body);
-        await newUser.save();
+    const existingUser = await User.findOne({ $or: [{ auth0Id }, { email }] });
 
-        res.status(201).json(newUser.toObject());
-
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ message: 'Error in creating user' })
+    if (existingUser) {
+      res.status(200).send();
+      return;
     }
-}
+
+    const newUser = new User(req.body);
+    await newUser.save();
+
+    res.status(201).json(newUser.toObject());
+    return;
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: 'Error in creating user' });
+    return;
+  }
+};
+
