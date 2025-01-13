@@ -6,14 +6,13 @@ import { User2, LogOut } from "lucide-react";
 import { useAuth0 } from "@auth0/auth0-react";
 
 const UserNameMenu = () => {
-    const {user,logout} = useAuth0();
-    console.log(user);
+    const { user, logout } = useAuth0();
     return (
         <div>
             <Popover>
                 <PopoverTrigger asChild>
                     <Avatar className="cursor-pointer">
-                        <AvatarImage src={user?.picture} alt="userpic.jpeg" />
+                        <AvatarImage src={user?.picture || 'https://via.placeholder.com/150'}alt="User Avatar"/>
                     </Avatar>
                 </PopoverTrigger>
                 <PopoverContent className="w-80">
@@ -35,7 +34,7 @@ const UserNameMenu = () => {
                         </div>
                         <div className="flex w-fit items-center gap-2 cursor-pointer">
                             <LogOut size='22' />
-                            <Button onClick={()=>logout()} variant="link" size='sm' className="hover:text-orange-500">Logout</Button>
+                            <Button onClick={() => logout()} variant="link" size='sm' className="hover:text-orange-500">Logout</Button>
                         </div>
                     </div>
                 </PopoverContent>
